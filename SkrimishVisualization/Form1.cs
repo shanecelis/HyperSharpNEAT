@@ -31,7 +31,7 @@ namespace SkirmishVisualization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
             this.Size = new Size((int)w.height, (int)w.width);
             SkirmishExperiment.multiple = true;
-            isMulti = true;
+            isMulti = false;
             this.toggleMultiToolStripMenuItem.Checked = isMulti;
         }
 

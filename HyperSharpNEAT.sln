@@ -18,6 +18,16 @@ Global
 		test|Any CPU = test|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.clean|Any CPU.ActiveCfg = Release|Any CPU
+		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.clean|Any CPU.Build.0 = Release|Any CPU
+		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Release Build|Any CPU.ActiveCfg = Release|Any CPU
+		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Release Build|Any CPU.Build.0 = Release|Any CPU
+		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.test|Any CPU.ActiveCfg = Release|Any CPU
+		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.test|Any CPU.Build.0 = Release|Any CPU
 		{3A64602B-C5E0-4CB7-99B0-1FC6ABB4449A}.clean|Any CPU.ActiveCfg = Release|Any CPU
 		{3A64602B-C5E0-4CB7-99B0-1FC6ABB4449A}.clean|Any CPU.Build.0 = Release|Any CPU
 		{3A64602B-C5E0-4CB7-99B0-1FC6ABB4449A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -48,16 +58,9 @@ Global
 		{D9828EED-D730-40BF-9A1C-7C3D947E7689}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9828EED-D730-40BF-9A1C-7C3D947E7689}.test|Any CPU.ActiveCfg = Release|Any CPU
 		{D9828EED-D730-40BF-9A1C-7C3D947E7689}.test|Any CPU.Build.0 = Release|Any CPU
-		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.clean|Any CPU.ActiveCfg = Release|Any CPU
-		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.clean|Any CPU.Build.0 = Release|Any CPU
-		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Release Build|Any CPU.ActiveCfg = Release|Any CPU
-		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Release Build|Any CPU.Build.0 = Release|Any CPU
-		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.test|Any CPU.ActiveCfg = Release|Any CPU
-		{235CB71D-ED9B-40B6-819C-1FF70F89720F}.test|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = SkrimishVisualization\SkirmishVisualization.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
