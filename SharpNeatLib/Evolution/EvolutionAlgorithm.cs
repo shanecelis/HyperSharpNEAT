@@ -258,9 +258,7 @@ namespace SharpNeatLib.Evolution
 			Debug.Assert(pop.PerformIntegrityCheck(), "Population integrity check failed.");
 		}
 
-
-		public void PerformOneGeneration()
-		{
+    public void SetupOneGeneration() {
 		//----- Elmininate any poor species before we do anything else. These are species with a zero target
 		//		size for this generation and will therefore not have generate any offspring. Here we have to 
 		//		explicitly eliminate these species, otherwise the species would persist because of elitism. 
@@ -288,6 +286,17 @@ namespace SharpNeatLib.Evolution
 
 		//----- Stage 2. Evaluate genomes / Update stats.
 			populationEvaluator.EvaluatePopulation(pop, this);			
+
+    }
+    
+		public void PerformOneGeneration()
+		{
+      SetupOneGeneration();
+      FinishOneGeneration();
+    }
+
+		public void FinishOneGeneration()
+		{
 			UpdateFitnessStats();
 			DetermineSpeciesTargetSize();
 			

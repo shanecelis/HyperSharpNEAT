@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 
 using SharpNeatLib.NeatGenome;
 using SharpNeatLib.NeuralNetwork;
-using SharpNeatLib.NetworkVisualization;
+//using SharpNeatLib.NetworkVisualization;
 
 namespace SharpNeatLib
 {
@@ -304,6 +304,7 @@ namespace SharpNeatLib
 		
 		#region Decode To NetworkModel
 
+/*
 		static public NetworkModel DecodeToNetworkModel(ConcurrentNetwork network)
 		{
 			ModelNeuronList masterNeuronList = new ModelNeuronList();
@@ -366,7 +367,7 @@ namespace SharpNeatLib
 
 			return new NetworkModel(masterNeuronList);
 		}
-
+*/
 		#endregion
 
 		#region Built-In FastConnection Sorting

@@ -9,7 +9,8 @@ namespace SharpNeatLib.AppConfig
 
 		public static ExperimentConfigInfo[] ReadExperimentConfigCatalog()
 		{
-			return (ExperimentConfigInfo[])ConfigurationSettings.GetConfig(EXPERIMENT_CATALOG_NAME);
+      //return (ExperimentConfigInfo[])ConfigurationSettings.GetConfig(EXPERIMENT_CATALOG_NAME);
+      return null;
 		}
 	}
 }

@@ -1,11 +1,11 @@
 using System;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 
 using SharpNeatLib.NeuralNetwork;
 
 namespace SharpNeatLib.Experiments
 {
-	abstract public class AbstractExperimentView : Form
+	abstract public class AbstractExperimentView// : Form
 	{	
 		/// <summary>
 		/// Refresh the view using the provided network. The intention here is that the current best network

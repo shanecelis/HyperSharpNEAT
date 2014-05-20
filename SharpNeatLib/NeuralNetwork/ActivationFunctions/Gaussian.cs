@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SharpNeatLib.NeuralNetwork
 {
-    class Gaussian : IActivationFunction
+    public class Gaussian : IActivationFunction
     {
         #region IActivationFunction Members
 

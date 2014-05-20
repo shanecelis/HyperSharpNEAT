@@ -24,7 +24,7 @@ namespace SharpNeatLib.AppConfig
 	/// 
 	/// Reads each experiment is read into an ExperimentConfigInfo object.
 	/// </summary>
-	public class ExperimentConfigurationSectionHandler : IConfigurationSectionHandler
+	public class ExperimentConfigurationSectionHandler //: IConfigurationSectionHandler
 	{
 		#region Public Methods
 
