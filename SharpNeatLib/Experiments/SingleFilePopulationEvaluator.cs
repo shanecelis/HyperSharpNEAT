@@ -15,9 +15,11 @@ namespace SharpNeatLib.Experiments
 	/// </summary>
 	public class SingleFilePopulationEvaluator : IPopulationEvaluator
 	{
+
 		public INetworkEvaluator networkEvaluator;
 		public IActivationFunction activationFn;
 		public ulong evaluationCount=0;
+    public Func<IGenome, INetwork> genomeDecode;
 
 		#region Constructor
         public SingleFilePopulationEvaluator()
@@ -27,11 +29,16 @@ namespace SharpNeatLib.Experiments
 		{
 			this.networkEvaluator = networkEvaluator;
 			this.activationFn = activationFn;
+      this.genomeDecode = DefaultGenomeDecoder;//new Func<IGenome, INetwork>();
 		}
 
 		#endregion
 
 		#region IPopulationEvaluator Members
+
+    public INetwork DefaultGenomeDecoder(IGenome g) {
+      return g.Decode(activationFn);
+    }
 
 		public virtual void EvaluatePopulation(Population pop, EvolutionAlgorithm ea)
 		{
@@ -44,14 +51,14 @@ namespace SharpNeatLib.Experiments
 				if(g.EvaluationCount!=0)
 					continue;
 
-				INetwork network = g.Decode(activationFn);
+				INetwork network = genomeDecode(g);
 				if(network==null)
 				{	// Future genomes may not decode - handle the possibility.
 					g.Fitness = EvolutionAlgorithm.MIN_GENOME_FITNESS;
 				}
 				else
 				{
-					g.Fitness = Math.Max(networkEvaluator.EvaluateNetwork(network), EvolutionAlgorithm.MIN_GENOME_FITNESS);
+					g.Fitness = Math.Max(networkEvaluator.Evaluate(network), EvolutionAlgorithm.MIN_GENOME_FITNESS);
 				}
 
 				// Reset these genome level statistics.

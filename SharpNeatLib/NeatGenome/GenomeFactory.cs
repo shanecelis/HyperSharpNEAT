@@ -16,60 +16,64 @@ namespace SharpNeatLib.NeatGenome
 		/// <returns></returns>
 		public static IGenome CreateGenome(NeatParameters neatParameters, IdGenerator idGenerator, int inputNeuronCount, int outputNeuronCount, float connectionProportion)
 		{
-            IActivationFunction actFunct;
+      IActivationFunction actFunct;
 			NeuronGene neuronGene; // temp variable.
 			NeuronGeneList inputNeuronGeneList = new NeuronGeneList(); // includes bias neuron.
 			NeuronGeneList outputNeuronGeneList = new NeuronGeneList();
 			NeuronGeneList neuronGeneList = new NeuronGeneList();
 			ConnectionGeneList connectionGeneList = new ConnectionGeneList();
 
-			// IMPORTANT NOTE: The neurons must all be created prior to any connections. That way all of the genomes
-			// will obtain the same innovation ID's for the bias,input and output nodes in the initial population.
-			// Create a single bias neuron.
-            //TODO: DAVID proper activation function change to NULL?
-            actFunct = ActivationFunctionFactory.GetActivationFunction("NullFn");
-            neuronGene = new NeuronGene(idGenerator.NextInnovationId, NeuronType.Bias, actFunct);
+			// IMPORTANT NOTE: The neurons must all be created prior to any
+			// connections. That way all of the genomes will obtain the same
+			// innovation ID's for the bias,input and output nodes in the
+			// initial population.  Create a single bias neuron.
+      //TODO: DAVID proper activation function change to NULL?
+      actFunct = ActivationFunctionFactory.GetActivationFunction("NullFn");
+      neuronGene = new NeuronGene(idGenerator.NextInnovationId, NeuronType.Bias, actFunct);
 			inputNeuronGeneList.Add(neuronGene);
 			neuronGeneList.Add(neuronGene);
 
 			// Create input neuron genes.
-            actFunct = ActivationFunctionFactory.GetActivationFunction("NullFn");
+      actFunct = ActivationFunctionFactory.GetActivationFunction("NullFn");
 			for(int i=0; i<inputNeuronCount; i++)
 			{
-                //TODO: DAVID proper activation function change to NULL?
-                neuronGene = new NeuronGene(idGenerator.NextInnovationId, NeuronType.Input, actFunct);
+        //TODO: DAVID proper activation function change to NULL?
+        neuronGene = new NeuronGene(idGenerator.NextInnovationId, NeuronType.Input, actFunct);
 				inputNeuronGeneList.Add(neuronGene);
 				neuronGeneList.Add(neuronGene);
 			}
 
 			// Create output neuron genes. 
-            //actFunct = ActivationFunctionFactory.GetActivationFunction("NullFn");
+      //actFunct = ActivationFunctionFactory.GetActivationFunction("NullFn");
 			for(int i=0; i<outputNeuronCount; i++)
 			{
-                actFunct = ActivationFunctionFactory.GetActivationFunction("BipolarSigmoid");
-                //actFunct = ActivationFunctionFactory.GetRandomActivationFunction(neatParameters);
-                //TODO: DAVID proper activation function
-                neuronGene = new NeuronGene(idGenerator.NextInnovationId, NeuronType.Output, actFunct);
+        actFunct = ActivationFunctionFactory.GetActivationFunction("BipolarSigmoid");
+        //actFunct = ActivationFunctionFactory.GetRandomActivationFunction(neatParameters);
+        //TODO: DAVID proper activation function
+        neuronGene = new NeuronGene(idGenerator.NextInnovationId, NeuronType.Output, actFunct);
 				outputNeuronGeneList.Add(neuronGene);
 				neuronGeneList.Add(neuronGene);
 			}
 
-			// Loop over all possible connections from input to output nodes and create a number of connections based upon
+			// Loop over all possible connections from input to output nodes
+			// and create a number of connections based upon
 			// connectionProportion.
 			foreach(NeuronGene targetNeuronGene in outputNeuronGeneList)
 			{
 				foreach(NeuronGene sourceNeuronGene in inputNeuronGeneList)
 				{
-					// Always generate an ID even if we aren't going to use it. This is necessary to ensure connections
-					// between the same neurons always have the same ID throughout the generated population.
+					// Always generate an ID even if we aren't going to use
+					// it. This is necessary to ensure connections between the
+					// same neurons always have the same ID throughout the
+					// generated population.
 					uint connectionInnovationId = idGenerator.NextInnovationId;
 
 					if(Utilities.NextDouble() < connectionProportion)
 					{	// Ok lets create a connection.
 						connectionGeneList.Add(	new ConnectionGene(connectionInnovationId, 
-							sourceNeuronGene.InnovationId,
-							targetNeuronGene.InnovationId,
-							(Utilities.NextDouble() * neatParameters.connectionWeightRange ) - neatParameters.connectionWeightRange/2.0));  // Weight 0 +-5
+                                                       sourceNeuronGene.InnovationId,
+                                                       targetNeuronGene.InnovationId,
+                                                       (Utilities.NextDouble() * neatParameters.connectionWeightRange ) - neatParameters.connectionWeightRange/2.0));  // Weight 0 +-5
 					}
 				}
 			}
@@ -116,42 +120,42 @@ namespace SharpNeatLib.NeatGenome
 				// Reset the connection weights
 				foreach(ConnectionGene connectionGene in newGenome.ConnectionGeneList)
 					connectionGene.Weight = (Utilities.NextDouble() * neatParameters.connectionWeightRange) - neatParameters.connectionWeightRange/2.0;
-                //newGenome.ConnectionGeneList.Add(new ConnectionGene(idGenerator.NextInnovationId,5,newGenome.NeuronGeneList[Utilities.Next(newGenome.NeuronGeneList.Count-7)+7].InnovationId ,(Utilities.NextDouble() * neatParameters.connectionWeightRange) - neatParameters.connectionWeightRange/2.0));
-                //newGenome.ConnectionGeneList.Add(new ConnectionGene(idGenerator.NextInnovationId, 6, newGenome.NeuronGeneList[Utilities.Next(newGenome.NeuronGeneList.Count - 7) + 7].InnovationId, (Utilities.NextDouble() * neatParameters.connectionWeightRange) - neatParameters.connectionWeightRange / 2.0));
+        //newGenome.ConnectionGeneList.Add(new ConnectionGene(idGenerator.NextInnovationId,5,newGenome.NeuronGeneList[Utilities.Next(newGenome.NeuronGeneList.Count-7)+7].InnovationId ,(Utilities.NextDouble() * neatParameters.connectionWeightRange) - neatParameters.connectionWeightRange/2.0));
+        //newGenome.ConnectionGeneList.Add(new ConnectionGene(idGenerator.NextInnovationId, 6, newGenome.NeuronGeneList[Utilities.Next(newGenome.NeuronGeneList.Count - 7) + 7].InnovationId, (Utilities.NextDouble() * neatParameters.connectionWeightRange) - neatParameters.connectionWeightRange / 2.0));
 				genomeList.Add(newGenome);
 			}
 
-            //
+      //
 
 			return genomeList;
 		}
 
-        public static GenomeList CreateGenomeListAddedInputs(NeatGenome seedGenome, int length, NeatParameters neatParameters, IdGenerator idGenerator)
-        {
-            //Build the list.
-            GenomeList genomeList = new GenomeList();
+    public static GenomeList CreateGenomeListAddedInputs(NeatGenome seedGenome, int length, NeatParameters neatParameters, IdGenerator idGenerator)
+    {
+      //Build the list.
+      GenomeList genomeList = new GenomeList();
 
-            // Use the seed directly just once.
-            NeatGenome newGenome = new NeatGenome(seedGenome, idGenerator.NextGenomeId);
-            //genomeList.Add(newGenome);
+      // Use the seed directly just once.
+      NeatGenome newGenome = new NeatGenome(seedGenome, idGenerator.NextGenomeId);
+      //genomeList.Add(newGenome);
 
-            // For the remainder we alter the weights.
-            for (int i = 0; i < length; i++)
-            {
-                newGenome = new NeatGenome(seedGenome, idGenerator.NextGenomeId);
+      // For the remainder we alter the weights.
+      for (int i = 0; i < length; i++)
+      {
+        newGenome = new NeatGenome(seedGenome, idGenerator.NextGenomeId);
 
-                // Reset the connection weights
-                foreach (ConnectionGene connectionGene in newGenome.ConnectionGeneList)
-                    connectionGene.Weight = (Utilities.NextDouble() * neatParameters.connectionWeightRange) - neatParameters.connectionWeightRange / 2.0;
-                newGenome.ConnectionGeneList.Add(new ConnectionGene(idGenerator.NextInnovationId, 5, newGenome.NeuronGeneList[Utilities.Next(newGenome.NeuronGeneList.Count - 7) + 7].InnovationId, (Utilities.NextDouble() * neatParameters.connectionWeightRange) - neatParameters.connectionWeightRange / 2.0));
-                newGenome.ConnectionGeneList.Add(new ConnectionGene(idGenerator.NextInnovationId, 6, newGenome.NeuronGeneList[Utilities.Next(newGenome.NeuronGeneList.Count - 7) + 7].InnovationId, (Utilities.NextDouble() * neatParameters.connectionWeightRange) - neatParameters.connectionWeightRange / 2.0));
-                genomeList.Add(newGenome);
-            }
+        // Reset the connection weights
+        foreach (ConnectionGene connectionGene in newGenome.ConnectionGeneList)
+          connectionGene.Weight = (Utilities.NextDouble() * neatParameters.connectionWeightRange) - neatParameters.connectionWeightRange / 2.0;
+        newGenome.ConnectionGeneList.Add(new ConnectionGene(idGenerator.NextInnovationId, 5, newGenome.NeuronGeneList[Utilities.Next(newGenome.NeuronGeneList.Count - 7) + 7].InnovationId, (Utilities.NextDouble() * neatParameters.connectionWeightRange) - neatParameters.connectionWeightRange / 2.0));
+        newGenome.ConnectionGeneList.Add(new ConnectionGene(idGenerator.NextInnovationId, 6, newGenome.NeuronGeneList[Utilities.Next(newGenome.NeuronGeneList.Count - 7) + 7].InnovationId, (Utilities.NextDouble() * neatParameters.connectionWeightRange) - neatParameters.connectionWeightRange / 2.0));
+        genomeList.Add(newGenome);
+      }
 
-            //
+      //
 
-            return genomeList;
-        }
+      return genomeList;
+    }
 
 
 		public static GenomeList CreateGenomeList(Population seedPopulation, int length, NeatParameters neatParameters, IdGenerator idGenerator)

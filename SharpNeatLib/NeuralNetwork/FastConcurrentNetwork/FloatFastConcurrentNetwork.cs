@@ -18,7 +18,7 @@ namespace SharpNeatLib.NeuralNetwork
 
 		IActivationFunction[] activationFnArray;
 
-        Modulus mod = (Modulus)ActivationFunctionFactory.GetActivationFunction("Modulus");
+    Modulus mod = (Modulus)ActivationFunctionFactory.GetActivationFunction("Modulus");
 		// Neurons are ordered with bias and input nodes at the head of the list, then output nodes and
 		// hidden nodes on the array's tail.
 		public float[] neuronSignalArray;
@@ -42,11 +42,11 @@ namespace SharpNeatLib.NeuralNetwork
 		#region Constructor
 
 		public FloatFastConcurrentNetwork(	int biasNeuronCount, 
-										int inputNeuronCount,
-										int outputNeuronCount,
-										int totalNeuronCount,
-										FloatFastConnection[] connectionArray, 
-										IActivationFunction[] activationFnArray)
+                                        int inputNeuronCount,
+                                        int outputNeuronCount,
+                                        int totalNeuronCount,
+                                        FloatFastConnection[] connectionArray, 
+                                        IActivationFunction[] activationFnArray)
 		{
 			this.biasNeuronCount = biasNeuronCount;
 			this.inputNeuronCount = inputNeuronCount;
@@ -86,7 +86,7 @@ namespace SharpNeatLib.NeuralNetwork
 			// neurons should be untouched.
 			for(int i=totalInputNeuronCount; i<_neuronSignalArray.Length; i++)
 			{
-                //TODO: DAVID STUFF
+        //TODO: DAVID STUFF
 				neuronSignalArray[i] = activationFnArray[i].Calculate(_neuronSignalArray[i]);
 				//neuronSignalArray[i] = 1.0F+(_neuronSignalArray[i]/(0.1F+Math.Abs(_neuronSignalArray[i])));
 				
@@ -97,38 +97,38 @@ namespace SharpNeatLib.NeuralNetwork
 
 		public void MultipleSteps(int numberOfSteps)
 		{
-            //System.IO.StreamWriter write = new System.IO.StreamWriter("nodes20.txt");
-            for (int i = 0; i < numberOfSteps; i++)
-            {
-                //foreach (float f in neuronSignalArray)
-                  //  write.Write(f + " ");
-                //write.WriteLine();
-                //write.WriteLine();
-                SingleStep();
+      //System.IO.StreamWriter write = new System.IO.StreamWriter("nodes20.txt");
+      for (int i = 0; i < numberOfSteps; i++)
+      {
+        //foreach (float f in neuronSignalArray)
+        //  write.Write(f + " ");
+        //write.WriteLine();
+        //write.WriteLine();
+        SingleStep();
                 
-            }
-            //foreach (float f in neuronSignalArray)
-            //    write.Write(f + " ");
-            //write.WriteLine();
-            //write.WriteLine();
-            //write.WriteLine("**");
-            //write.Close();
+      }
+      //foreach (float f in neuronSignalArray)
+      //    write.Write(f + " ");
+      //write.WriteLine();
+      //write.WriteLine();
+      //write.WriteLine("**");
+      //write.Close();
 		}
 
-        public void MultipleStepsWithMod(int numberOfSteps, int factor)
-        {
-            //System.IO.StreamWriter write = new System.IO.StreamWriter("nodes1.txt");
-            for (int i = 0; i < numberOfSteps; i++)
-            {
-                SingleStep(factor);
-               // foreach (float f in neuronSignalArray)
-               //     write.Write(f + " ");
-                //write.WriteLine();
-            }
-            //write.WriteLine("**");
-        }
+    public void MultipleStepsWithMod(int numberOfSteps, int factor)
+    {
+      //System.IO.StreamWriter write = new System.IO.StreamWriter("nodes1.txt");
+      for (int i = 0; i < numberOfSteps; i++)
+      {
+        SingleStep(factor);
+        // foreach (float f in neuronSignalArray)
+        //     write.Write(f + " ");
+        //write.WriteLine();
+      }
+      //write.WriteLine("**");
+    }
 
-        public void SingleStep(int factor)
+    public void SingleStep(int factor)
 		{
 			// Loop connections. Calculate each connection's output signal.
 			for(int i=0; i<connectionArray.Length; i++)
@@ -145,11 +145,11 @@ namespace SharpNeatLib.NeuralNetwork
 			// neurons should be untouched.
 			for(int i=totalInputNeuronCount; i<_neuronSignalArray.Length; i++)
 			{
-                //TODO: DAVID STUFF
-                if (activationFnArray[i] == mod)
-                    neuronSignalArray[i]=mod.Calculate(_neuronSignalArray[i], factor);
-                else
-				    neuronSignalArray[i] = activationFnArray[i].Calculate(_neuronSignalArray[i]);
+        //TODO: DAVID STUFF
+        if (activationFnArray[i] == mod)
+          neuronSignalArray[i]=mod.Calculate(_neuronSignalArray[i], factor);
+        else
+          neuronSignalArray[i] = activationFnArray[i].Calculate(_neuronSignalArray[i]);
 				//neuronSignalArray[i] = 1.0F+(_neuronSignalArray[i]/(0.1F+Math.Abs(_neuronSignalArray[i])));
 				
 				// Take the opportunity to reset the pre-activation signal array.
@@ -186,7 +186,7 @@ namespace SharpNeatLib.NeuralNetwork
 				// neurons should be untouched.
 				for(int i=totalInputNeuronCount; i<_neuronSignalArray.Length; i++)
 				{
-                    //TODO: DAVID STUFF
+          //TODO: DAVID STUFF
 					float oldSignal = neuronSignalArray[i];
 					neuronSignalArray[i] = activationFnArray[i].Calculate(_neuronSignalArray[i]);
 					//neuronSignalArray[i] = 1.0F+(_neuronSignalArray[i]/(0.1F+Math.Abs(_neuronSignalArray[i])));
@@ -214,17 +214,17 @@ namespace SharpNeatLib.NeuralNetwork
 				neuronSignalArray[i+biasNeuronCount] = (float)signalArray[i];
 		}
 
-        public void SetInputSignal(int index, float signalValue)
-        {
-            neuronSignalArray[biasNeuronCount + index] = signalValue;
-        }
+    public void SetInputSignal(int index, float signalValue)
+    {
+      neuronSignalArray[biasNeuronCount + index] = signalValue;
+    }
 
-        public void SetInputSignals(float[] signalArray)
-        {
-            // For speed we don't bother with bounds checks.
-            for (int i = 0; i < signalArray.Length; i++)
-                neuronSignalArray[i + biasNeuronCount] = signalArray[i];
-        }
+    public void SetInputSignals(float[] signalArray)
+    {
+      // For speed we don't bother with bounds checks.
+      for (int i = 0; i < signalArray.Length; i++)
+        neuronSignalArray[i + biasNeuronCount] = signalArray[i];
+    }
 
 		public float GetOutputSignal(int index)
 		{
@@ -254,13 +254,48 @@ namespace SharpNeatLib.NeuralNetwork
 			}
 		}
 
-        public int TotalNeuronCount
-        {
-            get
-            {
-                return neuronSignalArray.Length;
-            }
-        }
+    public int TotalNeuronCount
+    {
+      get
+      {
+        return neuronSignalArray.Length;
+      }
+    }
+
+    public void MakeDotGraph(System.IO.StreamWriter writer) {
+      writer.WriteLine("digraph G {");
+      writer.WriteLine("rankdir=LR;");
+      writer.Write("subgraph cluster_bias { label= \"bias\"; "); 
+      for (int i = 0; i < biasNeuronCount; i++) {
+        writer.Write( i + ";");
+      }
+      writer.WriteLine("}");
+
+      writer.Write("subgraph cluster_input { label= \"input\"; "); 
+      for (int i = biasNeuronCount; i < inputNeuronCount + biasNeuronCount; i++) {
+        writer.Write( i + "; ");
+      }
+      writer.WriteLine("}");
+
+      writer.Write("subgraph cluster_output { label= \"output\"; "); 
+      for (int i = biasNeuronCount + inputNeuronCount; i < outputNeuronCount + inputNeuronCount + biasNeuronCount; i++) {
+        writer.Write( i + "; ");
+      }
+      writer.WriteLine("}");
+      int hiddenCount = TotalNeuronCount - (outputNeuronCount + inputNeuronCount + biasNeuronCount);
+      writer.Write("subgraph cluster_hidden { label= \"hidden\"; "); 
+      for (int i = outputNeuronCount + biasNeuronCount + inputNeuronCount; i < hiddenCount + outputNeuronCount + inputNeuronCount + biasNeuronCount; i++) {
+        writer.Write( i + "; ");
+      }
+      writer.WriteLine("}");
+
+      
+      foreach (FloatFastConnection connection in connectionArray) {
+        
+        writer.WriteLine(connection.sourceNeuronIdx + " -> " + connection.targetNeuronIdx + " [ label=\"" + connection.weight.ToString("0.0") + "\"];");
+      }
+      writer.WriteLine("}");
+    }
 
 		#endregion
 	}

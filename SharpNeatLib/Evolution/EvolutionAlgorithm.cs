@@ -9,18 +9,19 @@ namespace SharpNeatLib.Evolution
 {
 	public class EvolutionAlgorithm
 	{
-		#region Constants
+#region Constants
 
 		/// <summary>
-		/// Genomes cannot have zero fitness because the fitness sharing logic requires there to be 
-		/// a non-zero total fitness in the population. Therefore this figure should be substituted
-		/// in where zero fitness occurs.
+		/// Genomes cannot have zero fitness because the fitness sharing
+		/// logic requires there to be a non-zero total fitness in the
+		/// population. Therefore this figure should be substituted in
+		/// where zero fitness occurs.
 		/// </summary>
 		public const double MIN_GENOME_FITNESS = 0.0000001;
 
-		#endregion
+#endregion
 
-		#region Class Variables
+#region Class Variables
 
 		Population pop;
 		IPopulationEvaluator populationEvaluator;
@@ -33,37 +34,44 @@ namespace SharpNeatLib.Evolution
 		bool pruningMode=false;
 		
 		/// <summary>
-		/// The last generation at which Population.AvgComplexity was reduced. We track this
-		/// when simplifications have completed and that therefore the prune phase should end.
+		/// The last generation at which Population.AvgComplexity was
+		/// reduced. We track this when simplifications have completed and
+		/// that therefore the prune phase should end.
 		/// </summary>
 		long prunePhase_generationAtLastSimplification;
 		float prunePhase_MinimumStructuresPerGenome;
 
 		/// <summary>
-		/// Population.AvgComplexity when AdjustSpeciationThreshold() was last called. If mean complexity
-		/// moves away from this value by a certain amount then it's time to re-apply the speciation threshold
-		/// to the whole population by calling pop.RedetermineSpeciation().
+		/// Population.AvgComplexity when AdjustSpeciationThreshold() was
+		/// last called. If mean complexity moves away from this value by
+		/// a certain amount then it's time to re-apply the speciation
+		/// threshold to the whole population by calling
+		/// pop.RedetermineSpeciation().
 		/// </summary>
 		double meanComplexityAtLastAdjustSpeciationThreshold;
 
-		// All offspring are temporarily held here before being added to the population proper.
+		// All offspring are temporarily held here before being added to
+		// the population proper.
 		GenomeList offspringList = new GenomeList();
 
-		// Tables of new connections and neurons created during adiitive mutations. These tables
-		// are available during the mutations and can be used to check for matching mutations so
-		// that two mutations that create the same structure will be allocated the same ID. 
-		// Currently this matching is only performed within the context of a generation, which
-		// is how the original C++ NEAT code operated also.
+		// Tables of new connections and neurons created during adiitive
+		// mutations. These tables are available during the mutations and
+		// can be used to check for matching mutations so that two
+		// mutations that create the same structure will be allocated the
+		// same ID.  Currently this matching is only performed within the
+		// context of a generation, which is how the original C++ NEAT
+		// code operated also.
 		Hashtable newConnectionGeneTable = new Hashtable();
 		Hashtable newNeuronGeneStructTable = new Hashtable();
 
 		// Statistics
 		uint generation=0;
 		IGenome bestGenome;
+    IGenome secondBestGenome;
 		
-		#endregion
+#endregion
 
-		#region Constructors
+#region Constructors
 
 		/// <summary>
 		/// Default Constructor.
@@ -88,17 +96,18 @@ namespace SharpNeatLib.Evolution
 			neatParameters_PrunePhase.pMutateDeleteConnection = 0.33;
 			neatParameters_PrunePhase.pMutateDeleteSimpleNeuron = 0.33;
 
-			// Disable all crossover as this has a tendency to increase complexity, which is precisely what
-			// we don't want during a pruning phase.
+			// Disable all crossover as this has a tendency to increase
+			// complexity, which is precisely what we don't want during a
+			// pruning phase.
 			neatParameters_PrunePhase.pOffspringAsexual = 1.0;
 			neatParameters_PrunePhase.pOffspringSexual = 0.0;
 
 			InitialisePopulation();
 		}
 
-		#endregion
+#endregion
 
-		#region Properties
+#region Properties
 
 		public Population Population
 		{
@@ -156,6 +165,15 @@ namespace SharpNeatLib.Evolution
 			}
 		}
 
+		public IGenome SecondBestGenome
+		{
+			get
+			{
+				return secondBestGenome;
+			}
+		}
+
+
 		public Hashtable NewConnectionGeneTable
 		{
 			get
@@ -200,8 +218,9 @@ namespace SharpNeatLib.Evolution
 		}
 
 		/// <summary>
-		/// Get/sets a boolean indicating if connection weight fixing is enabled. Note that this technique
-		/// is currently tied to pruning mode, therefore if pruning mode is disabled then weight fixing
+		/// Get/sets a boolean indicating if connection weight fixing is
+		/// enabled. Note that this technique is currently tied to pruning
+		/// mode, therefore if pruning mode is disabled then weight fixing
 		/// will automatically be disabled.
 		/// </summary>
 		public bool IsConnectionWeightFixingEnabled
@@ -216,22 +235,25 @@ namespace SharpNeatLib.Evolution
 			}
 		}
 
-		#endregion
+#endregion
 
-		#region Public Methods
+#region Public Methods
 
 		/// <summary>
-		/// Evaluate all genomes in the population, speciate them and then calculate adjusted fitness
-		/// and related stats.
+		/// Evaluate all genomes in the population, speciate them and then
+		/// calculate adjusted fitness and related stats.
 		/// </summary>
 		/// <param name="p"></param>
 		private void InitialisePopulation()
 		{
-			// The GenomeFactories normally won't bother to ensure that like connections have the same ID 
-			// throughout the population (because it's not very easy to do in most cases). Therefore just
-			// run this routine to search for like connections and ensure they have the same ID. 
-			// Note. This could also be done periodically as part of the search, remember though that like
-			// connections occuring within a generation are already fixed - using a more efficient scheme.
+			// The GenomeFactories normally won't bother to ensure that like
+			// connections have the same ID throughout the population
+			// (because it's not very easy to do in most cases). Therefore
+			// just run this routine to search for like connections and
+			// ensure they have the same ID.  Note. This could also be done
+			// periodically as part of the search, remember though that like
+			// connections occuring within a generation are already fixed -
+			// using a more efficient scheme.
 			MatchConnectionIds();
 
 			// Evaluate the whole population. 
@@ -244,14 +266,16 @@ namespace SharpNeatLib.Evolution
 			// population as a whole and per species.
 			UpdateFitnessStats();
 
-			// Set new threshold 110% of current level or 10 more if current complexity is very low.
+			// Set new threshold 110% of current level or 10 more if current
+			// complexity is very low.
 			pop.PrunePhaseAvgComplexityThreshold = pop.AvgComplexity + neatParameters.pruningPhaseBeginComplexityThreshold;
 
-			// Obtain an initial value for this variable that tracks when we should call pp.RedetermineSpeciation().
+			// Obtain an initial value for this variable that tracks when we
+			// should call pp.RedetermineSpeciation().
 			meanComplexityAtLastAdjustSpeciationThreshold = pop.AvgComplexity;
 
-			// Now we have stats we can determine the target size of each species as determined by the
-			// fitness sharing logic.
+			// Now we have stats we can determine the target size of each
+			// species as determined by the fitness sharing logic.
 			DetermineSpeciesTargetSize();
 
 			// Check integrity.
@@ -259,20 +283,25 @@ namespace SharpNeatLib.Evolution
 		}
 
     public void SetupOneGeneration() {
-		//----- Elmininate any poor species before we do anything else. These are species with a zero target
-		//		size for this generation and will therefore not have generate any offspring. Here we have to 
-		//		explicitly eliminate these species, otherwise the species would persist because of elitism. 
-		//		Also, the species object would persist without any genomes within it, so we have to clean it up.
-		//		This code could be executed at the end of this method instead of the start, it doesn't really 
-		//		matter. Except that If we do it here then the population size will be relatively constant
-		//		between generations.
+      //----- Elmininate any poor species before we do anything
+      //		else. These are species with a zero target size for this
+      //		generation and will therefore not have generate any
+      //		offspring. Here we have to explicitly eliminate these
+      //		species, otherwise the species would persist because of
+      //		elitism.  Also, the species object would persist without
+      //		any genomes within it, so we have to clean it up.  This
+      //		code could be executed at the end of this method instead
+      //		of the start, it doesn't really matter. Except that If we
+      //		do it here then the population size will be relatively
+      //		constant between generations.
 			if(pop.EliminateSpeciesWithZeroTargetSize())
 			{	// If species were removed then we should recalculate population stats.
 				UpdateFitnessStats();
 				DetermineSpeciesTargetSize();
 			}
 
-		//----- Stage 1. Create offspring / cull old genomes / add offspring to population.
+      //----- Stage 1. Create offspring / cull old genomes / add
+      //----- offspring to population.
 			CreateOffSpring();
 			pop.TrimAllSpeciesBackToElite();
 
@@ -281,10 +310,11 @@ namespace SharpNeatLib.Evolution
 			for(int genomeIdx=0; genomeIdx<genomeBound; genomeIdx++)
 				pop.AddGenomeToPopulation(this, offspringList[genomeIdx]);
 
-			// Adjust the speciation threshold to try and keep the number of species within defined limits.
+			// Adjust the speciation threshold to try and keep the number of
+			// species within defined limits.
 			AdjustSpeciationThreshold();
 
-		//----- Stage 2. Evaluate genomes / Update stats.
+      //----- Stage 2. Evaluate genomes / Update stats.
 			populationEvaluator.EvaluatePopulation(pop, this);			
 
     }
@@ -304,7 +334,7 @@ namespace SharpNeatLib.Evolution
 			pop.IncrementSpeciesAges();
 			generation++;
 
-		//----- Stage 3. Pruning phase tracking / Pruning phase entry & exit.
+      //----- Stage 3. Pruning phase tracking / Pruning phase entry & exit.
 			if(pruningModeEnabled)
 			{
 				if(pruningMode)
@@ -328,15 +358,18 @@ namespace SharpNeatLib.Evolution
 		}
 
 		/// <summary>
-		/// Indicates that the # of species is outside of the desired bounds and that AdjustSpeciationThreshold()
-		/// is attempting to adjust the speciation threshold at each generation to remedy the situation.
+		/// Indicates that the # of species is outside of the desired
+		/// bounds and that AdjustSpeciationThreshold() is attempting to
+		/// adjust the speciation threshold at each generation to remedy
+		/// the situation.
 		/// </summary>
 		private bool speciationThresholdAdjustInProgress=false;
 
 		/// <summary>
-		/// If speciationThresholdAdjustInProgress is true then the amount by which we are adjustinf the speciation
-		/// threshol dper generation. This value is modified in order to try and find the correct threshold as quickly
-		/// as possibly.
+		/// If speciationThresholdAdjustInProgress is true then the amount
+		/// by which we are adjustinf the speciation threshol dper
+		/// generation. This value is modified in order to try and find
+		/// the correct threshold as quickly as possibly.
 		/// </summary>
 		private double compatibilityThresholdDelta;
 
@@ -387,7 +420,9 @@ namespace SharpNeatLib.Evolution
 						compatibilityThresholdDelta*=-0.5;
 					}
 					else
-					{	// Positive delta. Correct direction, so just increase the delta to try and find the correct value as quickly as possible.
+					{	// Positive delta. Correct direction, so just increase the
+            // delta to try and find the correct value as quickly as
+            // possible.
 						compatibilityThresholdDelta*=compatibilityThresholdDeltaAcceleration;
 					}
 				}
@@ -412,8 +447,9 @@ namespace SharpNeatLib.Evolution
 				double complexityDeltaProportion = Math.Abs(pop.AvgComplexity-meanComplexityAtLastAdjustSpeciationThreshold)/meanComplexityAtLastAdjustSpeciationThreshold; 
 
 				if(complexityDeltaProportion>0.05)
-				{	// If the population's complexity has changed by more than some proportion then force a 
-					// call to RedetermineSpeciation().
+				{	// If the population's complexity has changed by more than
+					// some proportion then force a call to
+					// RedetermineSpeciation().
 					redetermineSpeciationFlag = true;
 
 					// Update the tracking variable.
@@ -423,12 +459,14 @@ namespace SharpNeatLib.Evolution
 
 			if(redetermineSpeciationFlag)
 			{
-				// If the speciation threshold was adjusted then we must disregard all previous speciation 
-				// and rebuild the species table.
+				// If the speciation threshold was adjusted then we must
+				// disregard all previous speciation and rebuild the species
+				// table.
 				pop.RedetermineSpeciation(this);
 
-				// If we are in a pruning phase then we should reset the pruning phase tracking variables.
-				// We are effectively re-starting the pruning phase.
+				// If we are in a pruning phase then we should reset the
+				// pruning phase tracking variables.  We are effectively
+				// re-starting the pruning phase.
 				prunePhase_generationAtLastSimplification = generation;
 				prunePhase_MinimumStructuresPerGenome = pop.AvgComplexity;
 
@@ -567,9 +605,9 @@ namespace SharpNeatLib.Evolution
 //			pop.RedetermineSpeciation(this);
 //		}
 
-		#endregion
+#endregion
 
-		#region Private Methods
+#region Private Methods
 
 		private void CreateOffSpring()
 		{
@@ -597,6 +635,8 @@ namespace SharpNeatLib.Evolution
 				for(int i=0; i<offspringCount; i++)
 				{	// Add offspring to a seperate genomeList. We will add the offspring later to prevent corruption of the enumeration loop.
 					IGenome parent = RouletteWheelSelect(species);
+          if (parent == null)
+            UnityEngine.Debug.Log("rouletteWheel sucks.");
 					IGenome offspring = parent.CreateOffspring_Asexual(this);
 					offspring.ParentSpeciesId1 = parent.SpeciesId;
 					offspringList.Add(offspring);
@@ -754,7 +794,7 @@ namespace SharpNeatLib.Evolution
 						while(parent1==parent2 && j++ < 4);	// Slightly wasteful but not too bad. Limited by j.						
 					}
 
-					if(parent1 != parent2)
+					if(parent1 != parent2 && parent2 != null)
 					{
 						offspring = parent1.CreateOffspring_Sexual(this, parent2);
 						offspring.ParentSpeciesId1 = parent1.SpeciesId;
@@ -790,8 +830,14 @@ namespace SharpNeatLib.Evolution
 				if(selectValue <= accumulator)
 					return genome;
 			}
+      UnityEngine.Debug.Log("genomeBound " + genomeBound); 
+      UnityEngine.Debug.Log("accum " + accumulator);
+      UnityEngine.Debug.Log("select " + species.SelectionCountTotalFitness);
+      UnityEngine.Debug.Log("selectValue " + selectValue);
 			// Should never reach here.
-			return null;
+      // Just use the last one.
+      // XXX temporary fix.
+			return species.Members[genomeBound - 1];
 		}
 
 //		private IGenome EvenDistributionSelect(Species species)
@@ -849,6 +895,7 @@ namespace SharpNeatLib.Evolution
 				NeatGenome.NeatGenome genome = (NeatGenome.NeatGenome)(species.Members[0]);
 				if(genome.Fitness > bestFitness)
 				{
+          secondBestGenome = bestGenome;
 					bestGenome = genome;
 					bestFitness = bestGenome.Fitness;
 				}
@@ -1038,16 +1085,16 @@ namespace SharpNeatLib.Evolution
 			}
 		}
 
-		#endregion
+#endregion
 
-		#region Private Methods [Pruning Phase]
+#region Private Methods [Pruning Phase]
 
 		private bool TestForPruningPhaseBegin()
 		{
 			// Enter pruning phase if the complexity has risen beyond the specified threshold AND no gains in fitness have
 			// occured for specified number of generations.
 			return (pop.AvgComplexity > pop.PrunePhaseAvgComplexityThreshold) &&
-					((generation-pop.GenerationAtLastImprovement) >= neatParameters.pruningPhaseBeginFitnessStagnationThreshold);
+        ((generation-pop.GenerationAtLastImprovement) >= neatParameters.pruningPhaseBeginFitnessStagnationThreshold);
 		}
 
 		private bool TestForPruningPhaseEnd()
@@ -1135,9 +1182,9 @@ namespace SharpNeatLib.Evolution
 			}
 		}
 
-		#endregion
+#endregion
 
-		#region Some routines useful for profiling.
+#region Some routines useful for profiling.
 //		System.Text.StringBuilder sb = new System.Text.StringBuilder();
 //		int tickCountStart;
 //		int tickDuration;
@@ -1158,6 +1205,6 @@ namespace SharpNeatLib.Evolution
 //			System.Windows.Forms.MessageBox.Show(sb.ToString());
 //			sb = new System.Text.StringBuilder();
 //		}
-		#endregion
+#endregion
 	}
 }

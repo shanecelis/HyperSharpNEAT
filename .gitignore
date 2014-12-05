@@ -3,5 +3,5 @@ obj
 *.user
 *.suo
 *.pidb
-
+*.meta
 .DS_Store

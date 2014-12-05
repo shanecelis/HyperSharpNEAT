@@ -6,7 +6,7 @@ namespace SharpNeatLib.Evolution
 {
 	/// <summary>
 	/// Sort by Fitness(Descending). Genomes with like fitness are then sorted by genome size(Ascending).
-	/// This means the selection routines are more liley to select the fit AND the smallest first.
+	/// This means the selection routines are more likely to select the fit AND the smallest first.
 	/// </summary>
 	public class GenomeComparer : IComparer<IGenome>
 	{

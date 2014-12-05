@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
+using System.Runtime.Serialization;
 
 namespace SharpNeatLib.Evolution
 {
+  
+  [System.Serializable]
 	public class NeatParameters
 	{
 		#region Constants
@@ -132,7 +135,7 @@ namespace SharpNeatLib.Evolution
 		public double connectionWeightRange;
 
         //DAVID
-        public double[] activationProbabilities;
+    //public double[] activationProbabilities;
 		
 		#endregion
 
@@ -194,11 +197,11 @@ namespace SharpNeatLib.Evolution
 			connectionWeightRange = DEFAULT_CONNECTION_WEIGHT_RANGE;
 
             //DAVID
-            activationProbabilities = new double[4];
-            activationProbabilities[0] = DEFAULT_ACTIVATION_PROBABILITY;
-            activationProbabilities[1] = 0;
-            activationProbabilities[2] = 0;
-            activationProbabilities[3] = 0;
+            // activationProbabilities = new double[4];
+            // activationProbabilities[0] = DEFAULT_ACTIVATION_PROBABILITY;
+            // activationProbabilities[1] = 0;
+            // activationProbabilities[2] = 0;
+            // activationProbabilities[3] = 0;
 
 		}
 

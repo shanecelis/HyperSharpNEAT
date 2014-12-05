@@ -10,28 +10,28 @@ namespace SharpNeatLib.NeuralNetwork
 
 	public static class ActivationFunctionFactory
 	{
-        public static double[] probabilities;
-        public static IActivationFunction[] functions;
+    public static double[] probabilities;
+    public static IActivationFunction[] functions;
 
-        public static void setProbabilities(Dictionary<string,double> probs)
-        {
-            probabilities = new double[probs.Count];
-            functions = new IActivationFunction[probs.Count];
-            int counter = 0;
-            foreach (KeyValuePair<string, double> funct in probs)
-            {
-                probabilities[counter] = funct.Value;
-                functions[counter]= GetActivationFunction(funct.Key);
-                counter++;
-            }
+    public static void setProbabilities(Dictionary<string,double> probs)
+    {
+      probabilities = new double[probs.Count];
+      functions = new IActivationFunction[probs.Count];
+      int counter = 0;
+      foreach (KeyValuePair<string, double> funct in probs)
+      {
+        probabilities[counter] = funct.Value;
+        functions[counter]= GetActivationFunction(funct.Key);
+        counter++;
+      }
 
-        }
+    }
 
 		public static Hashtable activationFunctionTable = new Hashtable();
 
 		public static IActivationFunction GetActivationFunction(string functionId)
 		{
-            IActivationFunction activationFunction = (IActivationFunction)ActivationFunctionFactory.activationFunctionTable[functionId];
+      IActivationFunction activationFunction = (IActivationFunction)ActivationFunctionFactory.activationFunctionTable[functionId];
 			if(activationFunction==null)
 			{
 				activationFunction = CreateActivationFunction(functionId);
@@ -47,9 +47,9 @@ namespace SharpNeatLib.NeuralNetwork
 			return (IActivationFunction)Assembly.GetExecutingAssembly().CreateInstance(className);
 		}
 
-        public static IActivationFunction GetRandomActivationFunction(Evolution.NeatParameters np)
-        {
-            return functions[Maths.RouletteWheel.SingleThrow(probabilities)];
-        }
+    public static IActivationFunction GetRandomActivationFunction(Evolution.NeatParameters np)
+    {
+      return functions[Maths.RouletteWheel.SingleThrow(probabilities)]; // throwing here.
+    }
 	}
 }

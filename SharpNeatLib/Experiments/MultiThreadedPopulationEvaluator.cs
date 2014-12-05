@@ -124,7 +124,7 @@ namespace SharpNeatLib.Experiments
             }
             else
             {
-                e.g.Fitness = Math.Max(e.NetworkEvaluator.threadSafeEvaluateNetwork(network,sem2), EvolutionAlgorithm.MIN_GENOME_FITNESS);
+                e.g.Fitness = Math.Max(e.NetworkEvaluator.threadSafeEvaluate(network,sem2), EvolutionAlgorithm.MIN_GENOME_FITNESS);
             }
 
             // Reset these genome level statistics.

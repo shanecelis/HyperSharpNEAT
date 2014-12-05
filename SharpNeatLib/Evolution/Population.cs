@@ -405,7 +405,11 @@ namespace SharpNeatLib.Evolution
 				else
 				{	// Remove genomes from the species.
 					int delta = species.Members.Count - species.ElitistSize;
-					species.Members.RemoveRange(species.ElitistSize, delta);
+          try {
+            species.Members.RemoveRange(species.ElitistSize, delta);
+          } catch (ArgumentOutOfRangeException exp) {
+            Console.WriteLine("delta = " + delta);
+          }
 				}
 			}
 			//foreach(int speciesId in speciesToRemove)

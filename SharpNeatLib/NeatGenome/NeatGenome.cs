@@ -389,7 +389,8 @@ namespace SharpNeatLib.NeatGenome
 			if(network==null)
 			{
 				//network = GenomeDecoder.DecodeToConcurrentNetwork(this, activationFn);
-				network = GenomeDecoder.DecodeToFloatFastConcurrentNetwork(this, activationFn);
+				//network = GenomeDecoder.DecodeToFloatFastConcurrentNetwork(this, activationFn);
+        network = GenomeDecoder.DecodeToFloatFastConcurrentNetwork(this);
 				//network = GenomeDecoder.DecodeToIntegerFastConcurrentNetwork(this);
 				//network = GenomeDecoder.DecodeToFastConcurrentMultiplicativeNetwork(this, activationFn);
 			}

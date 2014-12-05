@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SharpNeatLib.NeuralNetwork;
+using UnityEngine;
 
 namespace SharpNeatLib.Experiments
 {
@@ -20,6 +21,8 @@ namespace SharpNeatLib.Experiments
 
         public static void loadParameterFile()
         {
+          Debug.Log("loadParameterFile()");
+          System.Console.WriteLine("loadParameterFile() console");
             try
             {
                 System.IO.StreamReader input = new System.IO.StreamReader(@"params.txt");
@@ -54,7 +57,7 @@ namespace SharpNeatLib.Experiments
             catch (Exception e)
             {
                 System.Console.WriteLine(e.Message);
-                System.Console.WriteLine("Error reading config file, check file location and formation");
+                System.Console.WriteLine("Error reading params.txt file, check file location and formation");
                 //close program
             }
             ActivationFunctionFactory.setProbabilities(activationFunctions);

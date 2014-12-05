@@ -60,7 +60,7 @@ namespace SharpNeatLib
 		static FloatFastConnection[] fastConnectionArray;
         static IActivationFunction[] activationFunctionArray;
 
-		static public FloatFastConcurrentNetwork DecodeToFloatFastConcurrentNetwork(NeatGenome.NeatGenome g, IActivationFunction activationFn)
+		static public FloatFastConcurrentNetwork DecodeToFloatFastConcurrentNetwork(NeatGenome.NeatGenome g)
 		{			
 			int outputNeuronCount = g.OutputNeuronCount;
 			int neuronGeneCount = g.NeuronGeneList.Count;
