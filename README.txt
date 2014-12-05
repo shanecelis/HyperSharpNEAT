@@ -1,3 +1,10 @@
+The 'unity' branch has modifications to work within Unity3D.  Mostly
+that required removing some directories that made Windows executables.
+Some things have been refactored.  And regrettably some Debug.Log
+statements were added for debugging purposes that ought to be removed.
+
+* * *
+
 HyperSharpNEAT v2.1 C#,
 By David D'Ambrosio
 http://www.cs.ucf.edu/~ddambro or http://eplex.cs.ucf.edu
